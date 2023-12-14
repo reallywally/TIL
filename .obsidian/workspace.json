@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "d5848bc4ed5b4b55",
+        "id": "55ceb1a38cae7f7b",
         "type": "tabs",
         "children": [
           {
-            "id": "153da85dd8cb86c8",
+            "id": "e88778255d693168",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -77,7 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "87095d2e429be10e",
@@ -162,11 +162,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "153da85dd8cb86c8",
+  "active": "e88778255d693168",
   "lastOpenFiles": [
-    "이미지들/Pasted image 20231214113338.png",
+    "images/20231214113027.png",
+    "images/Pasted image 20231214113338.png",
     "그냥 메모.md",
-    "이미지들/Pasted image 20231214113027.png",
+    "~@이미지.md",
+    "~@images/Pasted.md",
+    "~@images",
     "할일/메모.md",
     "할일/템플릿.md",
     "공부/java-spring/이건어떻게 쓰냐.md",
@@ -179,7 +182,7 @@
     "ㅁㄴㅇㅁㄴ.md",
     "Pasted image 20230424102956.png",
     "2023-04-21.md",
-    "이미지들",
+    "images",
     "무제 폴더",
     "Pasted image 20230421113631.png",
     "Pasted image 20230421104136.png",
