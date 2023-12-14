@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "c516892d71fa2147",
+        "id": "e03db1653a04c382",
         "type": "tabs",
         "children": [
           {
-            "id": "9db61c9ded936c26",
+            "id": "ad05aacfc1c72e61",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "할일/메모.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "b9c449b0009c792f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "공부/java-spring/이건어떻게 쓰냐.md",
+                "file": "그냥 메모.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "공부/java-spring/이건어떻게 쓰냐.md",
+                "file": "그냥 메모.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "공부/java-spring/이건어떻게 쓰냐.md",
+                "file": "그냥 메모.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "공부/java-spring/이건어떻게 쓰냐.md"
+                "file": "그냥 메모.md"
               }
             }
           },
@@ -175,12 +162,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "ddd4abe147ab893e",
+  "active": "ad05aacfc1c72e61",
   "lastOpenFiles": [
-    "그냥 메모.md",
-    "할일/템플릿.md",
     "할일/메모.md",
+    "할일/템플릿.md",
     "공부/java-spring/이건어떻게 쓰냐.md",
+    "그냥 메모.md",
     "공부/java-spring",
     "공부",
     "2023-12-13.md",
