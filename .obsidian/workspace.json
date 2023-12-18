@@ -150,7 +150,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -164,15 +164,15 @@
   },
   "active": "a1515fdc242a7dae",
   "lastOpenFiles": [
+    "할일/템플릿.md",
     "그냥 메모.md",
+    "공부/java-spring/LocalDateTime 포맷을 어떻게 받을까.md",
+    "할일/메모.md",
     "images/20231214113338.png",
     "images/20231214113027.png",
     "~@이미지.md",
     "~@images/Pasted.md",
     "~@images",
-    "할일/메모.md",
-    "할일/템플릿.md",
-    "공부/java-spring/이건어떻게 쓰냐.md",
     "공부/java-spring",
     "공부",
     "2023-12-13.md",
