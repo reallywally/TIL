@@ -150,7 +150,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 283.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -162,7 +162,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "83ad17af454a1e93",
+  "active": "6e8d4512bd16f70c",
   "lastOpenFiles": [
     "공부/java-spring/LocalDateTime 포맷을 어떻게 받을까.md",
     "공부/java-spring/Map.md",
