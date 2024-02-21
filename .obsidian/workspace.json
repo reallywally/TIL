@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "공부/java-spring/Map.md",
+                "file": "공부/DDD/메모.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "공부/java-spring/Map.md",
+                "file": "공부/DDD/메모.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "공부/java-spring/Map.md",
+                "file": "공부/DDD/메모.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "공부/java-spring/Map.md"
+                "file": "공부/DDD/메모.md"
               }
             }
           },
@@ -162,10 +162,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6e8d4512bd16f70c",
+  "active": "83ad17af454a1e93",
   "lastOpenFiles": [
-    "공부/java-spring/LocalDateTime 포맷을 어떻게 받을까.md",
+    "공부/리팩토링/Untitled.md",
+    "공부/DDD/메모.md",
+    "공부/DDD",
     "공부/java-spring/Map.md",
+    "공부/리팩토링",
+    "공부/java-spring/Untitled.md",
+    "공부/java-spring/LocalDateTime 포맷을 어떻게 받을까.md",
     "할일/메모.md",
     "할일/템플릿.md",
     "private/주시기.md",
@@ -191,9 +196,7 @@
     "Pasted image 20230424102956.png",
     "2023-04-21.md",
     "images",
-    "무제 폴더",
     "Pasted image 20230421113631.png",
-    "Pasted image 20230421104136.png",
-    "할일"
+    "Pasted image 20230421104136.png"
   ]
 }
