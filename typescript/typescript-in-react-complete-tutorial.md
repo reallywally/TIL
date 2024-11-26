@@ -81,24 +81,76 @@
 
 * 가독성, 유지보수, 재사용 등 장점으로 타입 추출(extracing type)
 
-    ```typescript
-    type ButtonProps = {
-      backgroundColor: string,
-      fontSize: number
-    }
+```typescript
+  type ButtonProps = {
+    backgroundColor: string,
+    fontSize: number
+  }
 
-    export default function MyButton({
-      backgroundColor,
-      fontSize
-    }: ButtonProps){
-      return(
-          <button className="....">
-              Click!!
-          </button>
-      )
-    }
-    ```
+  export default function MyButton({
+    backgroundColor,
+    fontSize
+  }: ButtonProps){
+    return(
+        <button className="....">
+            Click!!
+        </button>
+    )
+  }
+```
 
 ### Benefits of Typescript
 
 * 타입, properties 체크 가능
+
+### optional
+
+* 상황에 따라 모든 props가 필요하진 않음
+* 옵션 입력이 가능한 속성은 ?를 사용
+
+```typescript
+  type ButtonProps = {
+    backgroundColor: string,
+    fontSize?: number
+  }
+```
+
+### any
+
+* 어떤 타입이든 허용한다는 의미로 사용
+* 타입을 명확하게 정하지 못하거나 등 임시적으로 사용하고 가능하면 사용을 피하는게 좋음
+
+```typescript
+  type ButtonProps = {
+    backgroundColor: string,
+    fontSize: any
+  }
+ ```
+
+### union type
+
+* 여러 갑, 타입 중에 하나를 의미하는 용도로 사용
+* 예시는 enum 처럼 쓰는 방법만 나옴
+* 자세한 union type 내용은 업데이트 예정
+
+```typescript
+  type Color = "red" | "black" | "blue"
+
+  type ButtonProps = {
+    backgroundColor: "red" | "black" | "blue",
+    borderColor: Color, // 이렇게 타입 추출해서도 가능
+    fontSize: number | string  // 타입을 union으로도 가능
+  }
+```
+
+### Typing arrays
+
+* array로 사용할 속성 타입 뒤에 [] 붙이기
+
+```typescript
+  type ButtonProps = {
+    backgroundColor: "red" | "black" | "blue",
+    fontSize: number | string,
+    padding: number[],
+  }
+```
