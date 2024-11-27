@@ -154,3 +154,20 @@
     padding: number[],
   }
 ```
+
+### Tuple type
+
+* 갯수랑 타입이 정해진 목록 타입
+* 위에서 작성한 padding은 배열이라서 어떤값이든 계속 들어올 수있지만 튜플을 지정하면 포맷에 맞게 입력받을 수 있음
+
+```typescript
+ type ButtonProps = {
+    backgroundColor: "red" | "black" | "blue",
+    fontSize: number | string,
+    padding: [number, number, number, number],
+  }
+```
+
+### React.CSSProperties, Record type
+
+* CSS 관련 내용으로 지금은 중요한게 아닌겉 같아 나중에 내용 수정
