@@ -28,6 +28,24 @@
 
 #### 2.2 타입스크립트의 타입 시스템
 
+* 타입 애너테이션: 변수, 상수 혹은 함수의 인자와 반환 값에 타입을 명시하는 문법
+* 구조적 타이핑: int age과 같이 이름으로 타입을 구분하는게 아니고 구조로 타입을 구분
+
+    ```typescript
+    interface Developer {
+        value: number
+    }
+
+    let developer: Developer = { value: 35 };
+    ```
+
+* 구조적 서브타이핑: 속성을 바탕으로 타입을 구분
+
+    ```typescript
+    type stringOrNumber = string |number
+    ```
+
+
 #### 2.3 원시 타입
 
 #### 2.4 객체 타입
