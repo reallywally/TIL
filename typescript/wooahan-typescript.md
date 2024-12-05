@@ -55,5 +55,12 @@
 #### 2.4 객체 타입
 
 * object, {}, array, type, interface, function
+* object는 any와 유사하게 모든 타입 값을 유동적으로 할당할 수 있어 사용하지 않도록 권장
+* type과 interface를 어떻게 구분해서 사용할까?
+  * 배달이팀: 대부분 interface를 쓰고 간단한건 type
+  * 냥이팀: 정적인 내용은 type, 확장될수 있으면 interface
+  * 왕팀: 주로 type
+  * 공식 문서: 전역적으로 사용하면 interface, 작은 범위 내에서 사용하면 type
+  * 내 생각: 한 회사에서도 팀바팀으로 사용 기준이 다르기 때문에 우리도 정하기 나름인거 같음
 
 ### 3장 고급 타입
