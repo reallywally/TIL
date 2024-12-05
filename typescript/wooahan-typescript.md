@@ -60,7 +60,11 @@
   * 배달이팀: 대부분 interface를 쓰고 간단한건 type
   * 냥이팀: 정적인 내용은 type, 확장될수 있으면 interface
   * 왕팀: 주로 type
-  * 공식 문서: 전역적으로 사용하면 interface, 작은 범위 내에서 사용하면 type
-  * 내 생각: 한 회사에서도 팀바팀으로 사용 기준이 다르기 때문에 우리도 정하기 나름인거 같음
+  * 공식 문서: 전역적으로 사용하면 interface, 작은 범위 내에서 사용하면 type.
+    * 이 내용은 책에서 언급한 내용이고 실제 공식 문서에서 찾아봤는데 완벽한 하게 동일한 내용은 못찾음
+    * 링크: [Type aliases and interfaces are very similar, and in many cases you can choose between them freely](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces)
+  * 내 생각:
+    * 한 회사에서도 팀바팀으로 사용 기준이 다르기 때문에 우리도 정하기 나름인거 같음
+    * 공식문서도 자유롭게 선택하라는것으로 보면 너무 강압적으로 정할 필요는 없는듯
 
 ### 3장 고급 타입
