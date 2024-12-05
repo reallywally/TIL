@@ -45,7 +45,15 @@
     type stringOrNumber = string |number
     ```
 
+* 타입스크립트가 구조적 타이핑을 채택한 이유는 자바스크립트를 모델링 하였기 때문이고, 자바스크립트는 덕 타이핑을 기반으로 한다.
+  * 덕 타이핑: 어떤 타입에 부합하는 변수와 메서드를 가질 경우 해당 타입으로 간주하는 방식
 
 #### 2.3 원시 타입
 
+* boolean, undefined, null, number, bitint, string, symbol,
+
 #### 2.4 객체 타입
+
+* object, {}, array, type, interface, function
+
+### 3장 고급 타입
