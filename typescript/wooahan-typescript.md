@@ -68,3 +68,29 @@
     * 공식문서도 자유롭게 선택하라는것으로 보면 너무 강압적으로 정할 필요는 없는듯
 
 ### 3장 고급 타입
+
+#### 3.1 타입스크립트만의 독자적 타입 시스템
+
+* any:
+  * 자바스크립트의 모든 값을 오류 없이 받을 수 있음.
+  * 타입이 중요한 타입스크립트에서는 any 사용을 지양해다 좋은 패턴
+  * 하지만 어쩔 수 없이 사용해야하는 상황에는 사용
+    * 개발 단계에서 임시로 값을 지정할때
+    * 어떤 값을 받을지 정할 수 없을때
+    * 값을 예측할 수 없을때
+* unkowwn:
+  * any와 유사하게 모든 타입에 할당 가능
+  * 차이점은 unknown 타입은 any 타입 이외에 다른 타입으로 할당 불가
+
+    ``` typescript
+    let unknownValue: unknown;
+    unknownValue = 111; // (O)
+    unknownValue = "일일일"; // (O)
+    
+    let anyValue: any = unknownValue;  // (O)
+    let numberValue: number = unknownValue;  //(X)
+    let stringValue: string = unknownValue;  //(X)
+    ```
+
+  * any 타입과 비슷한데 추가된 이유는 뭘까?
+  
