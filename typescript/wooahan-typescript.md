@@ -93,4 +93,16 @@
     ```
 
   * any 타입과 비슷한데 추가된 이유는 뭘까?
-  
+    * any 타입은 임시로적을 사용하다가 특정 타입으로 수정해야 하는 것을 누락할 수 있지만 unknown은 실행할때 에러가 발생하여 any 타입 보다 안전하다.
+
+    ```typescript
+    // 할당은 에러 않남
+    const unknownFunction: unknown = () => console.log("!!!");
+
+    // 실행은 에러 발생
+    unknownFunction()
+    ```
+
+  * any타입 사용을 자제하는건 좋으나 아예 사용안하는것 또한 어렵다.
+
+* void 타입
