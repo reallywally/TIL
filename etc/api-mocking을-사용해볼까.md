@@ -22,14 +22,56 @@ MSW, JSON Server 두개 다 사용해 봤는데 내가 원하는대로 사용할
 ## 그래서 내가 사용한 방법은
 
 로컬에서 flask로 응답만 하는 모킹 서버를 만들어 사용하고 있다.
+flask 자체가 굉장히 간단한 서버로 실행되고 파이썬이 JSON을 관리하는데 편리하다.
 협업 관점에서는 MSW가 좋아보이나 지금은 간단한 사용만 필요하였다.
 디렉토리는 특별히 관리하지 않고 필요한것만 그때그때 수정하는 식으로 하니 지금까진 불편한 사항은 없다.
 
+### flask 샘플 코드
+
+- 디렉토리
+
+  ```text
+    project
+      -json
+        - userList.json
+        - userDetail.json
+      -app.py
+  ```
+
+- flask code
+
+  ``` python
+  from flask import Flask, jsonify
+  import json
+
+  app = Flask(__name__)
+
+
+  def read_json_file(file_path):
+      with open(file_path, 'r') as file:
+          data = json.load(file)
+
+      return data
+
+
+  @app.get('/users')
+  def user():
+      data = read_json_file("json/userList.json")
+      return jsonify(data)
+
+
+  @app.get('/users/<string:user_id>')
+  def user(user_id):
+      data = read_json_file("json/userDetail.json")
+      return jsonify(data)
+
+  ```
+
 ## 메모
 
-* MSW는 1.x에서 2.x로 바뀌면서 많은 부분이 변경된거 같다. 잘 찾아보고 하자
-  * <https://mswjs.io/docs/migrations/1.x-to-2.x/>
-* JSON Server를 사용할때 GET users/1 이라는 요청에 응답할려면 JSON 키로 users/1이 아니라 아래와 같이 목록으로 저장하면 id로 조회한다.
+- MSW는 1.x에서 2.x로 바뀌면서 많은 부분이 변경된거 같다. 잘 찾아보고 하자
+  - <https://mswjs.io/docs/migrations/1.x-to-2.x/>
+- JSON Server를 사용할때 GET users/1 이라는 요청에 응답할려면 JSON 키로 users/1이 아니라 아래와 같이 목록으로 저장하면 id로 조회한다.
 
   ```json
   {
