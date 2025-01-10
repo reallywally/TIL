@@ -8,6 +8,7 @@ ORM 모델에 type이 Date인 필드가 있다. 디버깅 해보면 API return �
 
 1. 수동 포맷팅  
     리턴 할때마다 날짜 변수를 isoformat로 변환해서 리턴하도록한다. 하지만 매번 하기도 번거롭고 휴먼 에러의 가능성이 매우 높기 때문에 글로벌 설정이 필요하다.
+
     ```python
     def test_response():
         result = {
@@ -20,6 +21,7 @@ ORM 모델에 type이 Date인 필드가 있다. 디버깅 해보면 API return �
 
 2. 글로벌 설정  
     flask 앱을 초기화 할때 JSON Provider를 생성해서 넣어준다.
+
     ```python
     from datetime import datetime, date
     from flask.json.provider import DefaultJSONProvider
@@ -39,4 +41,5 @@ ORM 모델에 type이 Date인 필드가 있다. 디버깅 해보면 API return �
     ```
 
 ## etc
+
 Flask 버전 3.X를 기준으로 작성했다. 이전 버전에는 import하는 클래스랑 app에 넣는 필드가 다르니 잘 찾아보자. 그리고 정상적인 코드는 ```app.json = CustomJSONProvider(app)```인데 GPT씨가 대신 ```app.json = CustomJSONProvider```로 알려줘서 삽질을 많이 했다. 다행히 영어로 물어보니 똑바로 대답했다.

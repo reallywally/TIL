@@ -22,7 +22,7 @@
   - pip install flake8 설치
   - VSCode 익스텐션에서 flake8 검색해서 설치
 - 간단 후기
-  - 특이사항 없음
+  - 문제를 수정하지는 않고 보고만함
   
 ### black
 
@@ -31,22 +31,32 @@
   - pip install black로 설치
   - VSCode 익스텐션에서 Black Formatter 검색해서 설치
 - 간단 후기
-  - 특이사항 없음
+  - 코드 포맷터라서 자동으로 코드를 변경해줌
+  - 자동 변경된 코드가 호불호가 갈릴 수 있음
 
-## 정리
-
-### 결론
+## 결론
 
 - pylint는 너무 깐깐해서 불편해서 패스
-- flake8랑 black의 차이점은 체감할 수 없었으나 다운로드 수와 깃헙 스타수가 많은 **black**이 좋을것으로 생각
+- 처음에는 flake8랑 black의 큰 차이점은 체감할 수 없었으나 다운로드 수와 깃헙 스타수가 많은 **black**이 좋을것으로 생각
+- 사용하다보니 black의 자동 변경된 코드가 마음에 들지 않는다는 의견이 생겨 flake8로 변경
 
-### 기타
+## 기타
 
-- lint 설정하면 인텔리제이는 pep8에 맞지 안는 부분을 표시해주는데 VSCode는 저장할때 자동 포맷팅해서 신경을 안써도됨
-  - 신경 안쓰는게 장점이기도 하지만 너무 pep8을 모르게 되는건 단점 같은
+- black은 자동 포맷이 장점이지만 무엇 때문에 변경됬는지 알 수 없어 pep8을 너무 모르게 되는건 단점이 되는것 같아 함꼐 사용해도 될것 같음
 - 인텔리제이/파이참에서 black을 쓸려면 툴 버전이 2023.2 이후껏만 가능
+- flake8에 ignore 등록 방법: ctl + shift + p하고 user settings에 아래와 같이 무시할 에러등록
+
+  ```json
+  "flake8.args": [ 
+    "--max-line-length=200", 
+    "--ignore=E501",        // too many line
+    "--ignore=E402",        // module level import not at top of file
+    "--ignore={무시할 에러코드}" 
+  ],
+  ```
 
 ### 참고자료
 
 - <https://f-lab.kr/blog/flake8-and-pylint-and-black>
 - <https://black.readthedocs.io/en/stable/integrations/editors.html>
+- <https://velog.io/@juheesvt/vscode%EC%97%90%EC%84%9C-flake8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0>
