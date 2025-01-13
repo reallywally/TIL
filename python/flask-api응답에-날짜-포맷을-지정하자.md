@@ -42,4 +42,5 @@ ORM 모델에 type이 Date인 필드가 있다. 디버깅 해보면 API return �
 
 ## etc
 
-Flask 버전 3.X를 기준으로 작성했다. 이전 버전에는 import하는 클래스랑 app에 넣는 필드가 다르니 잘 찾아보자. 그리고 정상적인 코드는 ```app.json = CustomJSONProvider(app)```인데 GPT씨가 대신 ```app.json = CustomJSONProvider```로 알려줘서 삽질을 많이 했다. 다행히 영어로 물어보니 똑바로 대답했다.
+* Flask 버전 3.X를 기준으로 작성했다. 이전 버전에는 import하는 클래스랑 app에 넣는 필드가 다르니 잘 찾아보자.
+* ```CustomJSONProvider```클래스를 주입하는 올바른 방법은 ```app.json = CustomJSONProvider(app)```인데 GPT씨가 대신 ```app.json = CustomJSONProvider```로 알려줘서 삽질을 많이 했다. 다행히 영어로 물어보니 똑바로 대답했다.
