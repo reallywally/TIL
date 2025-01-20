@@ -6,10 +6,56 @@ airflow dag에서 파이썬 코드를 실행할때 유틸리티 클래스 처럼
 
 ## 해결방법
 
-1. setup 파일  
-가상환경 활성화하고 pip install -e .
+1. setup 파일로 설치  
+    공통 모듈 루트 경로에 ```setup.py```을 만들고 배포될 환경에 설치하는 방식이다.
 
-2. 특정 위치나 plugin에 복사
+    ```python
+    from setuptools import setup, find_packages
+
+    setup(
+        name="my-custom-module",
+        version="0.5",
+        packages=find_packages()
+    )
+    ```
+
+    ```shell
+    python -m pip install .
+    ```
+
+2. 특정 위치나 plugin에 복사  
+    사실 이 방법으로 작동이 올바르게 실행되는지 테스트해보진 않았다. 하지만 리서칭 해보면 항상 나오는 방법이고 특별히 안될만한 이유도 없을것 같아 메모해두고 나중에 여유될때 테스해볼 예정이다.
+
+    ```markdown
+    dags/
+    ├── my_dag.py
+    ├── my_module.py
+    my_custom_module/
+    └── my_module1.py
+    plugins/
+    └── my_plugin/
+        └── my_module2.py
+    ```
+
+    ```python
+    # my_dag.py
+    from airflow import DAG
+    from airflow.operators.python import PythonOperator
+    from datetime import datetime
+    from my_custom_module.my_module1 import process_data  # 사용자 정의 모듈 import
+
+    with DAG(
+        dag_id="example_custom_module",
+        schedule_interval=None,
+        start_date=datetime(2025, 1, 1),
+        catchup=False,
+    ) as dag:
+        process_task = PythonOperator(
+            task_id="process_data_task",
+            python_callable=process_data,
+        )
+    ...
+    ```
 
 ## 참고자료
 
