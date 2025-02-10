@@ -82,4 +82,29 @@ export default UseStateTest;
 ```
 
 정상적으로 보이는거 같다. 그런데 로그를 보면 찍히는 값이 상태 증가되기 이전값으로 찍힌다.
-이유는 **useState가 비동기적으로 동작하는 훅이다**. 
+이유는 **useState가 비동기적으로 동작하는 훅이기 때문이다.**
+즉, 상태 업데이트가 즉시 반영되는 것이 아니라, 다음 렌더링 시점에서 새로운 값이 적용된다.
+
+## 왜 비동기적으로 작동하지? 해결 방법은?
+
+만약 즉각적인 상태 변경이 발생하면 렌더링이 그만큼 많이 발생하고, 성능 이슈가 발생한다. 그래서 성능을 최적화하기 위해 React가 여러 개의 상태 업데이트를 하나로 배치(batch)로 처리한다.
+만약 동기적인 방법으로 할려면 useEffect를 사용하면 되는데 이건 useEffect.md 파일을 참조하자.
+
+## 게으른 초기화(lazy initialization)
+
+보통 useState로 상태 초기화를 할때 특정 값이나 객체를 넣을것이다. 그런데 함수는 넣는 경우도 있고 이를 게으른 초기화라고 한다.
+
+```typescript
+// 바로 값 넣기
+const [count, setCount] = useState(
+  window.localStorage.getItem("count")
+);
+
+// 게으른 초기화
+const [count, setCount] = useState(() =>
+  window.localStorage.getItem("count")
+);
+```
+
+게으른 초기화는 오직 state가 처음 만들어질때만 사용되며 이후 리렌더링될때는 함수 실행을 무시한다.
+오래된 리액트 공식 문서(<https://legacy.reactjs.org/docs/hooks-reference.html#lazy-initial-state>)에서는 localStorage, sessionStorage, map, filter, find 등 state의 초기값이 무거운 연산을 할때 사용하기를 권장한다.
