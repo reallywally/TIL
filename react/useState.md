@@ -88,7 +88,23 @@ export default UseStateTest;
 ## 왜 비동기적으로 작동하지? 해결 방법은?
 
 만약 즉각적인 상태 변경이 발생하면 렌더링이 그만큼 많이 발생하고, 성능 이슈가 발생한다. 그래서 성능을 최적화하기 위해 React가 여러 개의 상태 업데이트를 하나로 배치(batch)로 처리한다.
-만약 동기적인 방법으로 할려면 useEffect를 사용하면 되는데 이건 useEffect.md 파일을 참조하자.
+만약 동기적인 방법으로 할려면 크게 두가지 방법이다. 첫번째는 useEffect를 사용하면 되는데 이건 useEffect.md 파일을 참조하자. 두번째는 set 함수의 콜백으로 처리하는거다. 위에 increment 함수는 다음과 같이 수정할 수도 있다.
+
+```typescript
+function increment() {
+  setCount((prev) => {
+    const newCount = prev + 1;
+
+    if (newCount > 5) {
+      alert("count is greater than 5");
+    }
+
+    return newCount;
+  });
+}
+```
+
+둘중에 어떤 방법이 더 좋다고 말하기 어려우니 취향과 상황에 맞게 편한걸로 사용하면 될것 같다.
 
 ## 게으른 초기화(lazy initialization)
 
