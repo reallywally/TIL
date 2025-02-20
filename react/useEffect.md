@@ -72,3 +72,34 @@ function Component(){
 2. 2번은 **렌더링 완료 후 실행**되는 반면, 1번은 렌더링 도중 실행된다. 즉 무거운 작업이면 1번은 렌더링을 방해하여 성능에 영향을 끼친다.
 
 ## useEffect를 사용할때 주의할 점
+
+1 eslint-disable-line react-hooks/exhaustive-deps는 사용을을 자제하자
+
+```typescript
+const Child1: React.FC<Child1Props> = ({ users }) => {
+  useEffect(() => {
+    console.log(users);
+  }, []);
+  ...
+```
+
+위 코드와 같이 의존선 배열에는 users가 없는데 useEffect 안에서 user를 사용하는 경우 eslint-disable-line react-hooks/exhaustive-deps 경고가 표시되는데 이 경고를 쉽게 생각하면 안된다.  
+useEffect는 반드시 **의존성 배열로 전달한 값의 변경에 의해 실행**돼야하는 훅이다. 즉 위 코드는 관찰하는 값과 실행해야하는 값이 별개로 작동하는것을 의미하기 때문에 useEffect를 사용하는 의미가 없어진다.
+
+2 useEffect의 첫번째 인수에 함수명을 작성하자
+
+코드가 복잡하지 않다면 익명 함수를 사용해도 문제가 없으나 코드가 많아지고 복잡해지면 어떤 일을 하는 useEffect 인지 파악하기 어렵다. 이때 적절한 함수명을 사용하면 어떤 기능을 하는 함수인지 알 수 있어 useEffect의 목적을 파악하기 쉬워진다.
+
+```typescript
+  // 함수명 X
+  useEffect(() => {
+    console.log(userName);
+  }, [userName]);
+
+  // 함수명 O
+  useEffect(() => {
+    function logUserName() {
+      console.log(userName);
+    }
+  }, [userName])
+```
