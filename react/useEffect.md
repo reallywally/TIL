@@ -103,3 +103,39 @@ useEffect는 반드시 **의존성 배열로 전달한 값의 변경에 의해 �
     }
   }, [userName])
 ```
+
+3 useEffect는 작게 만들자
+
+하나의 의존성 배열에 많은 값이 들어가면 어떤 기능을 하는지 파악하기도 어렵고 성능에도 이슈가 발생할 수 있다. 그러니 useEffect를 여러개 쓰더라도 작은 단위로 쪼개는게 좋다.
+
+4 불필요한 외부 함수를 만들지 말자
+
+처음 useEffect를 쓸대 아래와 같이 코드를 작성한 적이 있다.
+
+```typescript
+const Component: React.FC<Child1Props> = ({ users }) => {
+  const fetchUsers = () =>{
+    // 사용자 조회 로직
+    ... 
+
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [users]);
+  ...
+```
+
+fetchUsers()의 코드가 길고 함수명으로 어떤 기능을 하는지 표시하니 가독성이 좋은거 같았다. 하지만 이건 오해였다. useEffect도 변경을 감지하고 특정 기능을 하는 함수와 비슷하다. 그러니 useEffect안에서 원하는 작업을 하는게 훨씬 좋다.
+만약 정말로 함수를 쓰고 싶다면 2번에서 말한 방식을 사용하면 된다.
+
+```typescript
+const Component: React.FC<Child1Props> = ({ users }) => {
+
+  useEffect(() => {
+    // 사용자 조회 로직
+    ... 
+
+  }, [users]);
+  ...
+```
