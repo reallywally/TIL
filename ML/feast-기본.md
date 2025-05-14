@@ -18,15 +18,14 @@ Feature Store의 약자로 feast라 하며 Feature Store 개념에 필요한 기
 
 ## feast 컨셉
 
-### Entity
+정확하진 않지만 개념적인 구조와 의미는 다음과 같다.
 
-정확하진 않지만 개념적인 의미는 다음과 같다.
-
-- Feature: 컬럼
-- Entity: Pk
-- Data Source: DB
-- Feature View: 테이블
-- Feature Service: 조인
+```text
+  ├── Feature View(테이블) ──── Feature Service(조인)
+       ├── Feature(컬럼)
+       ├── Entity(PK)
+       ├── Data Source(DB)
+```
 
 ## 궁금했던 내용 정리
 
