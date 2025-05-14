@@ -28,6 +28,26 @@ Feature Store의 약자로 feast라 하며 Feature Store 개념에 필요한 기
 - Feature View: 테이블
 - Feature Service: 조인
 
+## 궁금했던 내용 정리
+
+1. 아래와 같이 store를 2개 만들면 각각은 독립적인 feast(Feasture Store)인가?
+
+```python
+from feast import FeatureStore
+
+store1 = FeatureStore()
+store2 = FeatureStore()
+```
+
+-> 아니다. FeatureStore는 설정 파일(feature_store.yaml)을 기준으로 인스턴스 되기 때문에 store1, store2는 같은 스토어이다. 만약 독립적인 feast를 만들려면 아래와 같이 설정 파일을 분리하면 된다.
+
+```python
+from feast import FeatureStore, Config
+
+store1 = FeatureStore(repo_path="feature_store_spark.yaml")
+store2 = FeatureStore(repo_path="feature_store_bigquery.yaml")
+```
+
 ## 참고자료
 
 - <https://heon28.tistory.com/16>
