@@ -31,21 +31,27 @@ Feature Store의 약자로 feast라 하며 Feature Store 개념에 필요한 기
 
 1. 아래와 같이 store를 2개 만들면 각각은 독립적인 feast(Feasture Store)인가?
 
-```python
-from feast import FeatureStore
+    ```python
+    from feast import FeatureStore
 
-store1 = FeatureStore()
-store2 = FeatureStore()
-```
+    store1 = FeatureStore()
+    store2 = FeatureStore()
+    ```
 
--> 아니다. FeatureStore는 설정 파일(feature_store.yaml)을 기준으로 인스턴스 되기 때문에 store1, store2는 같은 스토어이다. 만약 독립적인 feast를 만들려면 아래와 같이 설정 파일을 분리하면 된다.
+    -> 아니다. FeatureStore는 설정 파일(feature_store.yaml)을 기준으로 인스턴스 되기 때문에 store1, store2는 같은 스토어이다. 만약 독립적인 feast를 만들려면 아래와 같이 설정 파일을 분리하면 된다.
 
-```python
-from feast import FeatureStore, Config
+    ```python
+    from feast import FeatureStore, Config
 
-store1 = FeatureStore(repo_path="feature_store_spark.yaml")
-store2 = FeatureStore(repo_path="feature_store_bigquery.yaml")
-```
+    store1 = FeatureStore(repo_path="feature_store_spark.yaml")
+    store2 = FeatureStore(repo_path="feature_store_bigquery.yaml")
+    ```
+
+2. 오프라인 스토어로 연결된 DB를 직접 수정하면 apply와 동일한 결과를 볼 수 있을끼?
+
+    단순히 feature명이나 데이터에 오타가 있어서 수정하다가 궁금했다.  
+    -> 아니다. 기능적으로는 변경할수 있으나 feast가 온라인 스토어를 위해 materialized를 해야하기 때문에 전체 로직을 실행시키면 동일한 결과를 보기 어려울 수 있다. 그리고 apply는 메타데이터를 Registry db에 반영하는데 이 Registry db와도 싱크가 안맞을 수 있다.  
+    비즈니스 로직을 개발 할때도 1개의 API 요청으로 여러 테이블이 연결되기 때문에 DB로 직접 값을 변경하는건 위험하다. feast 역시 마찬가지로 DB로 직접 접근해서 값을 수정하는 작업은 하지 않는것이 좋다.
 
 ## 참고자료
 
