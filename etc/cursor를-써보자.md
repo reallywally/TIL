@@ -11,10 +11,15 @@
 
 ### cursor에서 vscode 설정 가져오기
 
-### 유용한 확장 프로그램
+- 메뉴에서 File > Preference > Cursor Settings 또든 윈도우 오른쪽 설정 버튼을 클릭하여 설정 메뉴로 이동
+- VS Code Import에서 Import 버튼을 클릭
+- VS Code는 계정으로 확장 프로그램과 설정이 동기화 되는데 cursor는 안되는것 같음
+
+### 기타 팁, 확장 프로그램
 
 1. Remote - SSH
 
-    - 서버에 접속할수 있는 툴
+    - 서버에 접속할수 있는 확장 프로그램
     - cursor에서 파일도 열어서 편집 가능하고 터미널로 실행 가능
     - 기존 mobaXterm 대체로 사용가능함
+    - 그런데 막상 사용해보니 좀 느림
