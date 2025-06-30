@@ -57,6 +57,10 @@ Feature Store의 약자로 feast라 하며 Feature Store 개념에 필요한 기
 
     아니다. materialize를 오프라인 스토어에서 온라인으로 적재하는것이고, 온라인 스토어 예시로 redis가 있어서 메모리에 올라간다고 잘못 이해하고 있었다. 1번 내용과같이 설정 정보는 yaml에있고, yaml에 메타정보를 저장하는 registry랑 온라인 스토어 저장 정보가 따로 있다.
 
+4. 동일한 DB 구조라면 데이터 소스는 그냥 변경해서 사용할 수 있나?
+
+    아니다. 처음 데이터 소스를 postgresql로 하여 feature view, feature service를 만들었는데 나중에 동일한 구조에 spark로만 변경했는데 AssertionError가 발생하였다. 데이터 소스 변경은 신중해야 할것이며, 만약 변경하다면 기존에 만들어진 feature view, feature service는 지우고 다시 만들어야 할것 이다.
+
 ## 참고자료
 
 - <https://heon28.tistory.com/16>
