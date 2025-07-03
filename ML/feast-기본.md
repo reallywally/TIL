@@ -61,6 +61,10 @@ Feature Store의 약자로 feast라 하며 Feature Store 개념에 필요한 기
 
     아니다. 처음 데이터 소스를 postgresql로 하여 feature view, feature service를 만들었는데 나중에 동일한 구조에 spark로만 변경했는데 AssertionError가 발생하였다. 데이터 소스 변경은 신중해야 할것이며, 만약 변경하다면 기존에 만들어진 feature view, feature service는 지우고 다시 만들어야 할것 이다.
 
+5. 조회 조건 없이 feature_view의 전체 데이터를 조회하고 싶다면 offline store를 사용하면 될까?
+
+    아니다. offline store로 데이터를 조회할려면 최소한 **entity 값**이 필요하다. 즉, 어떤 entity 값도 없이 offline store로 데이터를 조회하는건 불가능하다. Feast가 **"특정 entity들에 대한 피처를 효율적으로 조회"**하는 용도로 설계되었기 때문이다. 따라서 만약 전체 데이터를 조회하고 싶다면 offline store로 사용하는 DB에서 쿼리를 실행하는게 맞다.
+
 ## 참고자료
 
 - <https://heon28.tistory.com/16>
