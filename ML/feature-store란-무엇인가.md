@@ -12,9 +12,10 @@ ML 엔지니어 C: "학습할 때는 잘 되던 모델이 실서비스에서는 
 
 ## 📊 Feature Store란 무엇인가?
 
-**Feature Store**는 머신러닝 feature를 **중앙화된 저장소**에서 관리하고 제공하는 시스템입니다. 
+**Feature Store**는 머신러닝 feature를 **중앙화된 저장소**에서 관리하고 제공하는 시스템입니다.
 
 간단히 말하면:
+
 - **Feature**: 모델이 예측에 사용하는 입력 데이터 (고객 나이, 구매 이력 등)
 - **Store**: 이런 feature들을 효율적으로 저장하고 관리하는 중앙화된 시스템
 
@@ -57,6 +58,7 @@ serving_features = redis.get(f"user_avg_purchase_{user_id}")
 ## 🏗️ Feature Store의 핵심 구성 요소
 
 ### 1. 온라인 스토어 (Online Store)
+
 **목적**: 실시간 추론을 위한 저장소
 
 ```python
@@ -69,12 +71,14 @@ features = online_store.get_features(
 ```
 
 **특징**:
+
 - 🚀 **초저지연**: 1-10ms 내 응답
 - 🔑 **Key-Value 구조**: 빠른 조회를 위한 NoSQL
 - 📊 **최신 데이터**: 현재 시점의 feature 값
 - 🎯 **기술 스택**: Redis, DynamoDB, Cassandra
 
 ### 2. 오프라인 스토어 (Offline Store)
+
 **목적**: 모델 학습을 위한 대용량 데이터 처리
 
 ```python
@@ -89,12 +93,14 @@ training_data = offline_store.get_historical_features(
 ```
 
 **특징**:
+
 - 📈 **대용량 처리**: 테라바이트급 데이터 처리
 - ⏰ **시점 정확성**: 과거 특정 시점의 정확한 feature 값
 - 🔄 **배치 처리**: 효율적인 일괄 처리
 - 🎯 **기술 스택**: Parquet, BigQuery, Snowflake
 
 ### 3. Feature Registry
+
 **목적**: Feature의 메타데이터 관리
 
 ```yaml
@@ -111,9 +117,11 @@ user_purchase_features:
 ## 🚀 실제 사용 예시: 상품 추천 시스템
 
 ### 시나리오
+
 온라인 쇼핑몰에서 사용자에게 개인화된 상품을 추천하는 시스템
 
 ### 1. Feature 정의
+
 ```python
 # 사용자 feature
 user_features = FeatureView(
@@ -143,6 +151,7 @@ item_features = FeatureView(
 ```
 
 ### 2. 모델 학습 시
+
 ```python
 # 과거 데이터로 학습
 training_df = store.get_historical_features(
@@ -162,6 +171,7 @@ model.fit(training_df)
 ```
 
 ### 3. 실시간 추론 시
+
 ```python
 # 실시간 추천 API
 @app.route('/recommend/<user_id>')
@@ -180,16 +190,19 @@ def recommend(user_id):
 ## 📈 Feature Store의 장점
 
 ### 1. 개발 효율성 향상
+
 - ✅ **재사용성**: 한 번 개발된 feature를 여러 모델에서 활용
 - ✅ **표준화**: 일관된 feature 정의로 개발 시간 단축
 - ✅ **협업**: 팀 간 feature 공유 및 지식 전파
 
 ### 2. 모델 성능 향상
+
 - ✅ **일관성**: 학습과 서빙에서 동일한 feature 로직 사용
 - ✅ **최신성**: 실시간 feature 업데이트로 모델 성능 유지
 - ✅ **품질**: 중앙화된 검증 및 모니터링
 
 ### 3. 운영 효율성
+
 - ✅ **자동화**: 복잡한 feature 파이프라인 자동 관리
 - ✅ **모니터링**: 통합된 feature 상태 모니터링
 - ✅ **백필**: 새로운 feature 추가 시 과거 데이터 자동 생성
@@ -197,13 +210,17 @@ def recommend(user_id):
 ## ⚠️ 도입 시 고려사항
 
 ### 1. 언제 도입해야 할까?
+
 **도입 권장 상황**:
+
 - 여러 ML 모델을 운영하는 조직
 - 팀 간 동일한 feature 중복 개발이 빈번한 경우
 - Training-serving skew 문제가 자주 발생하는 경우
 
 **도입 비권장 상황**:
-- 단일 모델만 운영하는 소규모 팀
+
+- 단일 모델만 운영하는
+ 소규모 팀
 - Feature가 매우 단순하고 적은 경우
 - 실시간 추론 요구사항이 없는 경우
 
@@ -219,6 +236,7 @@ features = feature_store.get_features(entity_id=user_id)
 ```
 
 **주의점**:
+
 - 📊 **성능 오버헤드**: 추가 네트워크 호출로 인한 지연
 - 🔧 **운영 복잡성**: 추가 인프라 관리 필요
 - 💰 **비용**: 고성능 온라인 스토어 운영 비용
@@ -226,11 +244,13 @@ features = feature_store.get_features(entity_id=user_id)
 ## 🛠️ 주요 Feature Store 솔루션
 
 ### 오픈소스
+
 - **Feast**: 가장 인기 있는 오픈소스 Feature Store
 - **Feathr**: LinkedIn에서 개발한 엔터프라이즈급 솔루션
 - **Hopsworks**: 완전한 MLOps 플랫폼 포함
 
 ### 관리형 서비스
+
 - **AWS SageMaker Feature Store**: AWS 생태계 통합
 - **Google Vertex AI Feature Store**: GCP 환경 최적화
 - **Azure Machine Learning Feature Store**: Microsoft 클라우드 서비스
@@ -240,15 +260,17 @@ features = feature_store.get_features(entity_id=user_id)
 Feature Store는 **ML 조직의 성숙도가 높아질수록 필수적**인 인프라입니다.
 
 **도입을 고려해보세요**:
+
 - 👥 여러 팀이 ML 모델을 개발하고 있다
 - 🔄 동일한 feature를 반복 개발하고 있다
 - 🐛 Training-serving skew 문제를 자주 경험한다
 - 📈 모델 수와 복잡성이 지속적으로 증가한다
 
 **신중하게 접근하세요**:
+
 - 🎯 명확한 ROI 계산 후 도입
 - 🏗️ 점진적 도입 (핵심 feature부터 시작)
 - 👨‍💻 팀의 기술 역량과 운영 능력 고려
 
-Feature Store는 **"ML 팀의 생산성을 높이는 인프라"**입니다. 
+Feature Store는 **"ML 팀의 생산성을 높이는 인프라"**입니다.
 단순히 기술적 솔루션이 아닌, **조직의 ML 워크플로우를 개선하는 도구**로 접근해야 합니다.
