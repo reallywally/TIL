@@ -14,6 +14,7 @@ user1 = {
     "is_active": True
 }
 
+# ----------------------------
 # TypedDict
 from typing import TypedDict
 
@@ -31,7 +32,7 @@ user2: UserDict = {
 
 # 타입 오류
 user3: UserDict = {
-    "id": "USR0002",
+    "id": "USR0002",  # id는 int이어야 하는데 문자값으로 들어옴!
     "name": "Bob",
     "is_active": True
 }
