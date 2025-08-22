@@ -102,3 +102,11 @@ A. 그렇다. 그래서 등록을 하면 브라우저 수 만큼 등록이 된�
 const title = `테스트 글 - ${test.info().project.name}`;
 const title = `테스트 글 - ${Date.now()}`;
 ```
+
+Q. locator에 입력하는 셀렉터는 CSS 셀렉터와 동일한가?
+A. CSS 셀럭터를 포함하여 더 많은 기능을 제공한다. 대표적으로 text 확인 셀렉터가 있는데 테스트 환경에서 사용하기에 매우 편하다.
+
+```typescript
+page.locator('text=클릭하기')
+page.locator(':has-text("부분")')
+```
