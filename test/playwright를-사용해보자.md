@@ -61,34 +61,13 @@ test.describe("로그인 테스트", () => {
       page.locator("text=로그인 ID 또는 비밀번호가 일치하지 않습니다.").first(),
     ).toBeVisible({ timeout: 5000 });
   });
-
-    test("올바른 계정 정보로 로그인 성공", async ({ page }) => {
-    await page
-      .locator('input[type="text"], input[id="loginId"]')
-      .first()
-      .fill(TEST_USERNAME);
-    await page
-      .locator('input[type="password"], input[name="password"]')
-      .first()
-      .fill(TEST_PASSWORD);
-
-    await page
-      .locator(
-        'button[type="submit"], button:has-text("로그인"), button:has-text("Login")',
-      )
-      .first()
-      .click();
-
-    await page.waitForURL("http://localhost:5174/fp/feature", {
-      timeout: 10000,
-    });
-
-    await expect(page.locator("text=Feature Processing").first()).toBeVisible({
-      timeout: 5000,
-    });
-  });
 })
 ```
+
+## 테스트 순서 처리
+
+기본적으로 Playwright는 테스트를 병렬로 돌린다. 그래서 등록 테스트를 하고 등록된걸 삭제하는 테스트를 만들려면 반드시 등록이 완료된 이후에 삭제 테스트가 실행되어야 한다.
+순서를 보장하기 위한 방법으로 **test.step**와 **test.describe.serial**가있는데 차이점을 알아보자
 
 ## 궁금했던 내용
 
