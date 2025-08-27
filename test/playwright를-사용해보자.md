@@ -75,6 +75,10 @@ test.describe("로그인 테스트", () => {
 그런데 화면 기준으로 테스트 코드를 작성하다보니 메뉴B에서 테스트를 하기 위해서는 메뉴A에서 미리 등록이 필요한 부분이 많은데 CRUD 테스트 코드까지 만들기에는 비효율적인이란 생각이 들었다.
 그리고 E2E의 의미가 사용자의 관점에서 애플리케이션의 처음부터 끝까지 전체 흐름을 검증하는건데 CRUD 위주의 테스트는 적합하지 않은것 같았다. 그래서 내부적으로는 **"우리 서비스에서 유저가 반드시 성공적으로 해야 하는 주요 시나리오"**를 정리하여 작성하기로 하였다.
 
+## playwright(E2E 테스트)를 도입하면 무조건 좋을까?
+
+많은 회사에서 최근에 도입하는것 같지만 현실적으로 QA팀이 없는 조직에서 개발자가 E2E 테스트까지 관리하는게 쉽지 않다. 그리고 상황에 따라 이미 테스트 커버리지가 높거나 작성한 E2E 테스트 코드가 버그 및 에러를 확인하는데 도움이 되지 않는 상황이라면 도입하기가 애매하다. 결국 현재 조직 상황에 맞게 도입하고 도입하더라도 어느정도 수준까지 관리를 할지 잘 정해야 한다.
+
 ## 기타 궁금했던 내용
 
 Q. locator로 엘리먼트를 선택할때 렌더링된 HTML(DOM)으로 해야하는지 React 컴포넌트로 해야하는지  
@@ -98,6 +102,6 @@ page.locator(':has-text("부분")')
 
 ## 레퍼런스
 
-- <https://tech.kakaoent.com/front-end/2023/230209-e2e/>
-- <https://yozm.wishket.com/magazine/detail/2877/>
-<https://www.inflearn.com/community/questions/1369146/%ED%86%B5%ED%95%A9%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%9D%B8%EC%88%98%ED%85%8C%EC%8A%A4%ED%8A%B8-e2e-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%B4-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C%EC%9A%94?srsltid=AfmBOopLOGVBuWljJIstm3jMAZ5J9j-pt30TqiDdn2pvGqKXjj7eCQkX>
+- 카카오 엔터의 E2E 테스트 도입 경험기: <https://tech.kakaoent.com/front-end/2023/230209-e2e/>
+- 개발자A의 E2E 테스트 그만두기: <https://velog.io/@hoonki/E2E-%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8A%94-%EA%B7%B8%EB%A7%8C.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EA%B0%9C%EC%84%A0%EA%B8%B0>
+- 테스트별 차이 from 인프런 질문: <https://www.inflearn.com/community/questions/1369146/%ED%86%B5%ED%95%A9%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%9D%B8%EC%88%98%ED%85%8C%EC%8A%A4%ED%8A%B8-e2e-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%A0%90%EC%9D%B4-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C%EC%9A%94?srsltid=AfmBOopLOGVBuWljJIstm3jMAZ5J9j-pt30TqiDdn2pvGqKXjj7eCQkX>
