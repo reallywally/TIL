@@ -67,7 +67,42 @@ test.describe("로그인 테스트", () => {
 ## 테스트 순서 처리
 
 기본적으로 Playwright는 테스트를 병렬로 돌린다. 그래서 등록 테스트를 하고 등록된걸 삭제하는 테스트를 만들려면 반드시 등록이 완료된 이후에 삭제 테스트가 실행되어야 한다.
-순서를 보장하기 위한 방법으로 **test.step**와 **test.describe.serial**가있는데 차이점을 알아보자
+순서를 보장하기 위한 방법으로 **test.step**와 **test.describe.serial**가있는데 차이점을 알아보자. 우선 코드로 보면 다음과 같다.
+
+```typescript
+// test.describe.serial
+test.describe.serial("순서 테스트", () => {
+  test("테스트1", async () => {
+    console.log("테스트1");
+  });
+
+  test("테스트2", async () => {
+    console.log("테스트2");
+  });
+
+  test("테스트3", async () => {
+    console.log("테스트3");
+  });
+});
+
+// test.step
+test("순서 테스트", async () => {
+  await test.step("테스트1", async () => {
+    console.log("테스트1");
+  });
+
+  await test.step("테스트2", async () => {
+    console.log("테스트2");
+  });
+
+  await test.step("테스트3", async () => {
+    console.log("테스트3");
+  });
+});
+```
+
+두 방법 모두 순서대로 직렬처리하지만 **test.describe.serial**는 테스트 케이스들을 순서대로 실행하는것이고 **test.step**는 테스트 내부 로직을 단계별로 실행한다. 인텔리제이에서 테스트 코드 확인해보면 실행할때 **test.describe.serial**는 "순서 테스트" 뿐만 아니라 "테스트1", "테스트2", "테스트3"을 각각 실행할 수 있으나  **test.step**는 "순서 테스트" 1개만 실행할 수 있다.  
+그렇다면 어떤 상황에서 두개를 구분해서 사용해야할까? **test.describe.serial**는 독립된 테스트로 실행할 수 있기 때문에 테스트간의 의존성이 있을때 사용하면 좋고  **test.step**는 1개의 테스트에서 복잡한 시나리오를 구조화 할때 사용하면 좋다.
 
 ## 어떤 내용을 테스트 코드로 작성해야 할까?
 
