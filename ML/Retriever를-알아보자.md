@@ -15,6 +15,6 @@
 
 검색 방법과 목적에 따라 방법을 잘 선택해야한다. 핵심만 정리하면 Sparse Retriever는 키워드 검색, Dense Retriever는 의미적 표현 검색에 적합하다. 그래서 법률 문서, 기술 문서와 같이 정확한 키워드 검색이 필요한 상황에서는 Sparse Retriever를 선택하고 상담, 챗봇, RAG와 같이 유사성이 중요한 상황에서는 Dense Retriever를 선택한다.
 
-## Retriever 종류
+## Hybrid Retrieval
 
-### 벡터스토어 기반 Retriever
+실제 프로덕션 환경에서는 Sparse와 Dense의 장점을 결합한 Hybrid Retriever를 많이 사용한다.
