@@ -13,7 +13,7 @@ ORM 모델에 type이 Date인 필드가 있다. 디버깅 해보면 API return �
     def test_response():
         result = {
             "status": 200, 
-            "is_return_snake": date.isoformat()
+            "date": date.isoformat()
         }
 
         return jsonify(result)

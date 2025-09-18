@@ -24,8 +24,6 @@ print(list(z))  # [(1, 'a'), (2, 'b'), (3, 'c')]
 
     z = zip(a, b)
 
-    print(z)  # <zip object at 0x...>
-
     print(list(z))  # [(1, 'a'), (2, 'b'), (3, 'c')]
 
     print(list(z))  # [] <-- 소진되어 없음
