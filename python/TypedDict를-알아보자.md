@@ -55,6 +55,27 @@ def get_product_names(response: ApiResponse) -> List[str]:
     return []
 ```
 
+## Annotated 함께 사용
+
+원래 Annotaed는 기본 타입에 추가 메타데이터를 붙이는 용도로 사용된다. 주로 LangGraph, FastAPI, Pydantic, SQLAlchemy 등의 프레임워크나 검증기가 이 메타데이터를 활용한다. 아래 코드는 예시로 익혀두자.
+
+```python
+from typing import Annotated, List
+from pydantic import Field, BaseModel, ValidationError
+
+
+class Employee(BaseModel):
+    id: Annotated[int, Field(..., description="직원 ID")]
+    name: Annotated[str, Field(..., min_length=3, max_length=50, description="이름")]
+    age: Annotated[int, Field(gt=18, lt=65, description="나이 (19-64세)")]
+    salary: Annotated[
+        float, Field(gt=0, lt=10000, description="연봉 (단위: 만원, 최대 10억)")
+    ]
+    skills: Annotated[
+        List[str], Field(min_items=1, max_items=10, description="보유 기술 (1-10개)")
+    ]
+```
+
 ## 그럼 Dataclass는 어떤 차이지?
 
 얼핏 보면 Dataclass랑 동일하게 사용이 가능하다. TypedDict의 활용 예시를 찾아보면 위에 처럼 API 응답, Config 설정 등이 나왔는데 나는 항상 이거를 class로 만들어서 사용하고 있었기 때문에 실제 TypedDict 활용에 대해서는 공감이 잘 안됬다. 특히 딕셔너리는 속성에 접근할때 점(.)이 아닌 텍스트로 접근하여 오타가 발생하면 버그를 찾기 어려워 가능하면 class로 활용했다.  
