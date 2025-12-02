@@ -6,7 +6,7 @@
 
 ## 표면적 차이
 
-코드로 보면 우선 첫 번째 인자값이 이다.
+코드로 보면 우선 첫 번째 인자이다. 첫 번째 인자는 이름이 고정은 아니지만 관용적으로 인스턴스 메소드는 self, 클래스 메소드는 cls를 사용한다. 반면 static 메소드는 정적으로 사용하기 때문에 첫 번째 인자가 없다.
 
 ```python
 class MyClass:
@@ -29,7 +29,7 @@ class MyClass:
 
 ## 사용의 차이
 
-```@staticmethod```는 클래스나 인스턴스 정보가 필요 없는 독립적인 함수다. 사실상 일반 함수와 동일하나 네임스페이스가 클래스 안에 있는것이다. 대표적인 예시로 유틸 클래스가 있다.
+```@staticmethod```는 클래스나 인스턴스 정보가 필요 없는 독립적인 함수다. 그래서 인스턴스 메소드나 클래스 메소드와 다르게 **첫 번째 인자가 없다.** 사실상 일반 함수와 동일하나 네임스페이스가 클래스 안에 있는것이다. 대표적인 예시로 유틸 클래스가 있다.
 
 ```python
 class StringUtils:
@@ -51,4 +51,23 @@ print(StringUtils.count_vowels("Hello World"))  # 3
 
 이렇게 논리적으로 문자열 관련 유틸리티 기능을 하는 클래스이지만 메소드가 클래스 상태에 접근할 필요가 없는 경우에 ```@staticmethod```를 붙인다.
 
-반면 ```@classmethod```
+반면 ```@classmethod```는 클래스 자체를 첫 번째 인자(cls)로 받는다. 이 cls를 통해 클래스 변수에 접근하거나, 클래스의 새 인스턴스를 생성할 수 있다.
+
+```python
+class MyClass:
+    class_variable = "나는 클래스 변수"
+    
+    @classmethod
+    def show_class_info(cls):
+        # cls는 MyClass를 가리킴
+        print(f"클래스 이름: {cls.__name__}")
+        print(f"클래스 변수: {cls.class_variable}")
+        
+        # cls로 새 인스턴스 생성 가능
+        new_instance = cls()
+        return new_instance
+
+MyClass.show_class_info()
+# 클래스 이름: MyClass
+# 클래스 변수: 나는 클래스 변수
+```
