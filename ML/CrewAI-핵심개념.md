@@ -43,6 +43,58 @@ Crew는 Agent와 Task를 하나로 묶은 팀이다. 고객지원팀이 어떤 �
 
 ## 코드로 보는 구조
 
+앞서 설명한 내용을 다음과 같이 파이썬 코드로 정리할 수 있다.
+
+```python
+from crewai import Agent, Task, Crew, Process
+
+# 1. Agents 정의 (직원 채용)
+classifier = Agent(
+    role='수석 분류 담당자',
+    goal='고객 문의를 정확하게 카테고리화 한다',
+    backstory='당신은 고객의 의도를 0.1초 만에 파악하는 분류의 신입니다.',
+    verbose=True
+)
+
+refund_expert = Agent(
+    role='환불 담당자',
+    goal='규정에 의거하여 환불 가능 여부를 판단하고 응답을 작성한다',
+    backstory='당신은 회사의 자산을 지키면서도 고객을 존중하는 전문가입니다.',
+    verbose=True
+)
+
+# 2. Tasks 정의 (업무 지시서)
+# 사용자의 입력은 {inquiry} 변수로 들어옵니다.
+classify_task = Task(
+    description='다음 고객 문의를 분석하세요: "{inquiry}"',
+    expected_output='문의 유형 (환불/기술지원/기타)',
+    agent=classifier
+)
+
+process_refund_task = Task(
+    description='이전 분류 작업의 결과를 바탕으로, 환불 요청일 경우 규정을 검토하고 고객에게 보낼 정중한 답변을 작성하세요.',
+    expected_output='고객에게 보낼 최종 답변 텍스트',
+    agent=refund_expert,
+    context=[classify_task] # 이전 작업의 결과를 참고함
+)
+
+# 3. Crew 정의 (팀 결성 및 실행)
+support_crew = Crew(
+    agents=[classifier, refund_expert],
+    tasks=[classify_task, process_refund_task],
+    process=Process.sequential, # 순서대로 작업 (1 -> 2)
+    verbose=True
+)
+
+# 4. 챗봇 실행 (Kickoff)
+user_input = "산 지 3일 됐는데 마음에 안 들어요. 돈 돌려주세요."
+result = support_crew.kickoff(inputs={'inquiry': user_input})
+
+print("챗봇 답변:", result)
+```
+
 ## 궁금했던 내용
 
 ### 1개의 Agent는 1개의 Task만 할수 있나?
+
+아니다. 명확한 업무를 위해 1:1로 매핑하는 경우가 많지만 반드시는 아니다. 1:N으로 예시를 들면 환불 담당자가 환불 완료 후 문자 보내는 업무까지할 수 있기 때문이다. 그리고 CrewAI의 가장 강력한 특징 중 하나로 언급되는 **위임(Delegation)** 이라는 기능이 있다는데 이건 CrewAI를 좀더 공부하게 되었을떄 정리해보자.
