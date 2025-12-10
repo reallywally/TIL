@@ -1,16 +1,33 @@
 # JWT에 대하여
 
-## JWT란
+## JWT란?
 
-JWT(JSON Web Token)는 인증과 정보를 안전하게 전달하기 위한 토큰 기반 인증 방식이다. 클라이언트가 서버에 요청을 보낼 때 JWT를 포함하면 서버는 이를 검증하여 사용자의 신원을 확인하고 권한을 부여할수 있다.
+JWT(JSON Web Token)는 인증과 정보를 안전하게 전달하기 위한 토큰 기반 인증 방식이다. 클라이언트가 서버에 요청을 보낼 때 JWT를 포함하면 서버는 이를 검증하여 사용자의 신원을 확인하고 권한을 부여할 수 있다.
+
+### 왜 JWT를 사용할까?
+
+전통적인 세션 기반 인증은 서버에 사용자 정보를 저장해야 하지만, JWT는 토큰 자체에 정보를 담아 **stateless(무상태)** 방식으로 동작한다. 이는 서버의 부담을 줄이고 확장성을 높이는 데 유리하다.
+
+**세션 vs JWT 비교:**
+
+- **세션**: 서버 메모리나 DB에 사용자 정보 저장 → 서버 부하 증가, 여러 서버 간 동기화 필요
+- **JWT**: 토큰 자체에 정보 포함 → 서버는 검증만 수행, 수평 확장에 유리
 
 ## JWT의 구성 요소
 
-JWT는 Header.Payload.Signature와 같이 .(점) 단위로 3가지 구성 요소를 가지고 있다. 각각의 요소는 다음과 같다.
+JWT는 `Header.Payload.Signature`와 같이 .(점) 단위로 3가지 구성 요소로 이루어져 있다.
 
-### Header(헤더)
+실제 JWT 예시:
 
-토큰 유형과 서명에 어떤 알고리즘을 사용했는지 저장한다.
+```text
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTAxMTUyMDAsImV4cCI6MTcxMDEyMjQwMH0.xYz123...
+```
+
+각 부분은 Base64Url로 인코딩되어 있으며, 디코딩하면 원래 내용을 확인할 수 있다.
+
+### 1. Header(헤더)
+
+토큰 유형과 서명에 사용할 알고리즘 정보를 담는다.
 
 ```json
 {
@@ -19,11 +36,14 @@ JWT는 Header.Payload.Signature와 같이 .(점) 단위로 3가지 구성 요소
 }
 ```
 
-### Payload(페이로드)
+**주요 알고리즘:**
 
-사용자 정보와 추가적인 claim(클레임)을 포함한다.
-클레임이란 데이터 각각의 Key를 의미한다.
-아래 예시를 기준으로는 sub, role, iat, exp가 claim이다.
+- `HS256`: HMAC + SHA256 (대칭키 방식, 같은 비밀키로 서명/검증)
+- `RS256`: RSA + SHA256 (비대칭키 방식, 개인키로 서명, 공개키로 검증)
+
+### 2. Payload(페이로드)
+
+사용자 정보와 추가적인 claim(클레임)을 포함한다. 클레임이란 토큰에 담기는 정보의 한 조각을 의미하며, Key-Value 형태로 구성된다.
 
 ```json
 {
@@ -34,19 +54,34 @@ JWT는 Header.Payload.Signature와 같이 .(점) 단위로 3가지 구성 요소
 }
 ```
 
-claim이 필수는 아니지만 표준 스펙으로 사용이 권장되며, 많이 사용되는 claim 목록은 다음과 같다.
+#### 표준 클레임 (Registered Claims)
 
-1. iss(Issuer): 토큰 발급자
-2. sub(subject): 토큰 제목
-3. aud(Audience): 토큰 대상자
-4. exp(Expiration Time): 토큰 만료 시간
-5. nbf(Not Before): 토큰 활성 날짜
-6. iat(Issued At): 토큰 발급 시간
-7. jti(JWT ID): JWT 식별자
+클레임이 필수는 아니지만 JWT 표준 스펙(RFC 7519)으로 권장되는 클레임들이 있다:
 
-그외 필요한 custom claim을 추가해도 무방하지만 JWT를 디코딩하면 누구나 내용을 확인할 수 있기 때문에 주민번호, 비밀번호 등 민감한 정보는 담지 않는것이 좋다.
+1. `iss` (Issuer): 토큰 발급자
+2. `sub` (Subject): 토큰 제목 (보통 사용자 식별자)
+3. `aud` (Audience): 토큰 대상자
+4. `exp` (Expiration Time): 토큰 만료 시간 (Unix timestamp)
+5. `nbf` (Not Before): 토큰 활성 시작 시간
+6. `iat` (Issued At): 토큰 발급 시간
+7. `jti` (JWT ID): JWT 고유 식별자
 
-### Signature(시그니처)
+#### Custom Claim 사용 시 주의사항
+
+필요에 따라 `role`, `permissions`, `userId` 같은 커스텀 클레임을 추가할 수 있다. 하지만 **JWT는 암호화되지 않고 단순히 Base64Url 인코딩만 되어 있어** 누구나 디코딩하면 내용을 볼 수 있다.
+
+**⚠️ 절대 포함하면 안 되는 정보:**
+
+- 비밀번호
+- 주민등록번호
+- 신용카드 정보
+- 개인 민감정보
+
+**💡 실무 팁:** Payload 크기가 커지면 매 요청마다 전송되는 데이터량이 증가한다. 필요한 최소한의 정보만 담자.
+
+### 3. Signature(서명)
+
+Header와 Payload를 조합하고 비밀키로 서명하여 생성한다. 이 서명을 통해 토큰이 변조되지 않았음을 검증할 수 있다.
 
 ```text
 HMACSHA256(
@@ -55,8 +90,130 @@ HMACSHA256(
 )
 ```
 
-## 참고 자료
+**서명의 역할:**
 
-- 클레임 목록: <https://datatracker.ietf.org/doc/html/rfc7519#section-4.1>
-- <https://brunch.co.kr/@jinyoungchoi95/1>
-- <https://velog.io/@vamos_eon/JWT%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80-1>
+1. **무결성 검증**: 토큰이 중간에 변조되지 않았는지 확인
+2. **발급자 인증**: 올바른 서버에서 발급한 토큰인지 확인
+
+만약 공격자가 Payload의 `role`을 `USER`에서 `ADMIN`으로 변경하려 해도, 비밀키 없이는 올바른 서명을 만들 수 없어 서버가 이를 거부한다.
+
+## Access Token과 Refresh Token
+
+실무에서 JWT를 사용할 때는 보통 두 종류의 토큰을 함께 사용한다.
+
+### Access Token (액세스 토큰)
+
+실제 API 요청 시 사용하는 토큰으로, **짧은 만료 시간**(15분~1시간)을 가진다.
+
+**특징:**
+
+- 매 API 요청마다 헤더에 포함되어 전송
+- 만료 시간이 짧아 탈취되어도 피해 최소화
+- 서버는 이 토큰을 검증해서 사용자 인증/권한 확인
+
+### Refresh Token (리프레시 토큰)
+
+Access Token이 만료되었을 때 **새로운 Access Token을 발급받기 위한** 토큰으로, **긴 만료 시간**(2주~1개월)을 가진다.
+
+**특징:**
+
+- Access Token 재발급 용도로만 사용
+- 일반 API 요청에는 사용하지 않음
+- HttpOnly Cookie에 안전하게 저장
+- DB에 저장해서 강제 무효화 가능
+
+### 왜 두 개를 나눠서 사용할까?
+
+**하나만 사용하면 생기는 문제:**
+
+1. **만료 시간이 긴 토큰 하나만 사용할 경우**
+   - 토큰이 탈취되면 오랜 시간 악용 가능
+   - 보안 위험이 높음
+
+2. **만료 시간이 짧은 토큰 하나만 사용할 경우**
+   - 사용자가 15분마다 재로그인해야 함
+   - 사용자 경험(UX)이 매우 나쁨
+
+**Access + Refresh Token 조합의 장점:**
+
+- Access Token이 탈취되어도 짧은 시간만 악용 가능
+- Refresh Token으로 자동으로 새 Access Token 발급
+- 사용자는 재로그인 없이 서비스를 계속 이용 가능
+- Refresh Token은 DB에 저장해서 필요시 강제 무효화 가능
+
+그리고 항상 그렇듯 Access + Refresh Token 조합이 정답은 아니다. 듣기로는 시스템 특성과 실제 사용자 환경상 Access Token 1개의 만료 시간을 길게하여 사용하는 경우도 있었다.
+
+### 동작 흐름
+
+```text
+[최초 로그인]
+1. Client ─────────────────────> Server
+          (ID/PW)
+
+2. Client <──────────────────── Server
+          (Access Token + Refresh Token)
+
+[일반 API 요청]
+3. Client ─────────────────────> Server
+          (Authorization: Bearer <Access Token>)
+
+4. Client <──────────────────── Server
+          (데이터)
+
+[Access Token 만료 시]
+5. Client ─────────────────────> Server
+          (Authorization: Bearer <만료된 Access Token>)
+
+6. Client <──────────────────── Server
+          (401 Unauthorized - 토큰 만료)
+
+7. Client ─────────────────────> Server
+          (Refresh Token으로 재발급 요청)
+
+8. Client <──────────────────── Server
+          (새로운 Access Token)
+
+9. Client ─────────────────────> Server
+          (Authorization: Bearer <새 Access Token>)
+
+10. Client <─────────────────── Server
+           (데이터)
+```
+
+### 실전 구현 예제
+
+**로그인 시 두 토큰 발급:**
+
+```javascript
+function login(req, res) {
+  const user = authenticateUser(req.body); // 사용자 인증
+
+  // Access Token: 15분
+  const accessToken = jwt.sign(
+    { userId: user.id, role: user.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '15m' }
+  );
+
+  // Refresh Token: 7일
+  const refreshToken = jwt.sign(
+    { userId: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  // Refresh Token을 DB에 저장 (나중에 무효화 가능하도록)
+  saveRefreshTokenToDatabase(user.id, refreshToken);
+
+  // Refresh Token은 HttpOnly Cookie로 전송 (XSS 방어)
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: true, // HTTPS only
+    sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7일
+  });
+
+  // Access Token은 응답 본문으로 전송
+  res.json({ accessToken });
+}
+```
