@@ -217,3 +217,95 @@ function login(req, res) {
   res.json({ accessToken });
 }
 ```
+
+### 보안 강화 팁
+
+### 1. Refresh Token Rotation (토큰 로테이션)
+
+Refresh Token을 사용할 때마다 새로운 Refresh Token을 발급하고 기존 것은 무효화하는 방식. 더 높은 보안을 제공한다.
+
+```javascript
+function refreshAccessToken(req, res) {
+  // ... 검증 로직 ...
+
+  // 새 Access Token + 새 Refresh Token 발급
+  const newAccessToken = jwt.sign(/*...*/);
+  const newRefreshToken = jwt.sign(/*...*/);
+
+  // 기존 Refresh Token 무효화, 새 토큰 저장
+  updateRefreshTokenInDatabase(decoded.userId, newRefreshToken);
+
+  res.cookie('refreshToken', newRefreshToken, {/*...*/});
+  res.json({ accessToken: newAccessToken });
+}
+```
+
+#### 2. Refresh Token Family (토큰 패밀리)
+
+동일한 Refresh Token으로 여러 번 재발급 시도가 있으면 탈취로 간주하고 해당 사용자의 모든 토큰을 무효화한다.
+
+#### 3. 로그아웃 시 Refresh Token 삭제
+
+```javascript
+function logout(req, res) {
+  const refreshToken = req.cookies.refreshToken;
+
+  // DB에서 Refresh Token 삭제
+  deleteRefreshTokenFromDatabase(refreshToken);
+
+  // Cookie 삭제
+  res.clearCookie('refreshToken');
+  res.json({ message: '로그아웃 되었습니다' });
+}
+```
+
+## 실무에서 JWT 사용 시 주의사항
+
+### 1. 토큰 만료 시간 설정
+
+- **Access Token**: 짧게 (15분~1시간)
+- **Refresh Token**: 길게 (2주~1개월)
+
+```javascript
+// Access Token: 15분
+const accessToken = jwt.sign(payload, secret, { expiresIn: '15m' });
+
+// Refresh Token: 7일
+const refreshToken = jwt.sign(payload, secret, { expiresIn: '7d' });
+```
+
+### 2. 토큰 저장 위치
+
+**LocalStorage vs Cookie 논쟁:**
+
+- **LocalStorage**: XSS 공격에 취약
+- **HttpOnly Cookie**: XSS 방어 가능하지만 CSRF 공격 대비 필요
+
+**권장 방식**: Access Token은 메모리(변수), Refresh Token은 HttpOnly Cookie에 저장
+**예외**: 내부망처럼 상황에 따라 LocalStorage에 저장하는 경우도 있었음
+
+### 3. 토큰 무효화 전략
+
+JWT는 기본적으로 서버에서 무효화할 수 없다. 만료 시간이 되어야 자동으로 무효화된다.
+
+**해결 방법:**
+
+- **Blacklist**: Redis 등에 무효화된 토큰 목록 저장
+- **짧은 만료 시간 + Refresh Token**: 탈취 위험 최소화
+- **토큰 버전 관리**: Payload에 버전 정보 추가
+
+### 4. 비밀키 관리
+
+```javascript
+// ❌ 나쁜 예: 하드코딩
+const secret = "mySecretKey123";
+
+// ✅ 좋은 예: 환경변수 사용
+const secret = process.env.JWT_SECRET;
+```
+
+비밀키는 절대 코드에 하드코딩하지 말고, 환경변수나 비밀 관리 서비스(AWS Secrets Manager, HashiCorp Vault 등)를 활용하자.
+
+### 5. HTTPS 필수
+
+JWT는 암호화되지 않으므로 **반드시 HTTPS를 통해 전송**해야 한다. HTTP로 전송하면 중간에 토큰이 탈취될 수 있다.
