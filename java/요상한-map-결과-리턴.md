@@ -1,3 +1,7 @@
+# 요상한 map 결과 리턴
+
+## 문제의 코드
+
 ```java
 public class ReturnMain {  
     public static void main(String[] args) {  
@@ -25,9 +29,11 @@ public class ReturnMain {
 }
 ```
 
-### 상황은
-getMapV1 처럼 맵으로 내용 정리해서 리턴 받는 코드를 만들었는데 컴파일까지도 문제가 없다가 디비 저장할때 이슈가 발생했다.
+## 상황
 
-### 원인은
+위에 코드 처럼 getMapV1 처럼 맵으로 내용 정리해서 리턴 받는 코드를 만들었는데 컴파일까지도 문제가 없다가 디비 저장할때 이슈가 발생했다.
+
+### 원인
+
 ![](https://i.imgur.com/P8aXiqp.png)
 조금 납득하기 어려웠는데 분명히 Map<String, String>으로 받았지만 실제로는 자기 클래스에 이너 클래스로 타입이 생성되었다.
