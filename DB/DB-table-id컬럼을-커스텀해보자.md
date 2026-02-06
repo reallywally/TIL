@@ -13,6 +13,8 @@ UUID의 단점은 하면 길이가 큰 만큼 저장 공간을 많이 차지하�
 
 ### 3. 맞춤 ID
 
+내부 규칙으로 ID 포맷을 정하는 경우도 있다. 대표적인 예로 사용자 테이블 ID이면 USR000001, USR000002 이렇게 앞에 접두사를 붙인다.
+
 ## 참고자료
 
 - 토스 UUID: <https://docs.tosspayments.com/resources/glossary/uuid>
