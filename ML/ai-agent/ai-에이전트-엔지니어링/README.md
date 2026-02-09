@@ -1,6 +1,7 @@
 # 인프런 AI 에이전트 엔지니어링』완독 챌린지
 
-- 링크: <https://www.inflearn.com/challenge/4%EC%A3%BC-%EA%B3%BC%EC%A0%95-ai-%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4%EB%A7%81%EC%99%84/dashboard?cid=340523>
+- 챌린지 링크: <https://www.inflearn.com/challenge/4%EC%A3%BC-%EA%B3%BC%EC%A0%95-ai-%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4%EB%A7%81%EC%99%84/dashboard?cid=340523>
+- 깃헙: <https://github.com/TeeDDub/AI-Agent-Engineering>
 
 ## 일정
 
