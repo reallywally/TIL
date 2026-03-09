@@ -63,3 +63,59 @@
 | 쿼리 분해 에이전트 | 근거가 명확한 검색 정확도 | 다수의 도구 호출 필요 | 리서치, 사실 기반 Q&A |
 | 성찰형 에이전트 | 초기 오류 감지 | 추가 연산 및 지연시간 | 고위험, 안전이 중요한 작업 |
 | 심층 리서치 에이전트 | 다단계 및 적응형 조사 관리 | 높은 연산 비용과 매우 긴 지연시간 | 장문의 문헌 리뷰 |
+
+## 도구 선택
+
+### 표준 도구 선택
+
+- 도구와 정의, 설명을 파운데이션 모델에 함께 제공하고 가장 적합한 도구를 선택하도록 모델에 요청한다.
+- 효과적인 도구 선택을 위한 가이드
+  - 도구에 간결하고 설명적인 이름 붙인다.
+    - 예) process_number 대신 calculate_sum
+  - 도구의 고유 목적을 한 문장으로 요약한다
+    - 예) 두 수의 합을 반환한다.
+  - 입력 타입과 범위를 명시한다.
+    - 예) x와 y는 0~100 사이의 정수여야 한다.
+
+### 시멘틱 도구 선택
+
+- 모든 사용 가능한 도구를 시맨틱 표현으로 인덱싱하고 시맨틱 검색으로 가장 관련성 높은 도구를 가져 온다.
+- 예)
+
+  ```python
+  tool_descriptions = {
+    "query_wolfram_alpha": "Wolfram Alpha를 이용해 수학식을 계산하거나 정보를 조회한다.",
+    "trigger_zapier_webhook": "미리 정의된 자동화 워크플로를 실행하기 위해 zapier 웹훅을 트리거 한다."
+    ...
+  }
+  ```
+
+- 한 번만 처리되면 그 다음부터는 빠르게 조회할 수 있다.
+
+### 계층적 도구 선택
+
+- 도구가 많을 때 유용한 방법이다.
+- 쉽게 말해 그룹핑 하는것이다.
+- 정확도를 높일 수는 있으나 유지보수가 어렵기 때문에 매우 많은 수의 도구를 사용하는 경우에만 권장한다.
+- 예)
+
+  ```python
+  tool_groups = {
+    "Computation": {
+      "description": '''Tools related to mathematical computations and data analysis.''',
+      "tools": []
+    },
+    "Automation": {
+      "description": '''Tools that automate workflows and integrate different services.''',
+      "tools": []
+    },
+    "Communication": {
+      "tools": []
+      "description": "Tools that facilitate communication and messaging.",
+    }
+  }
+  ```
+
+  ## 도구 실행
+
+  ### 
