@@ -54,3 +54,8 @@
 ### 7.2.4 DPO(Direct Perference Optimization): 직접 선호 최적화
 
 - 결과를 사람이 선택하여 출력이 사람의 품질 순위 판단에 더 가깝게 정렬되도록 한다.
+
+### 7.2.5 RLVR(Reinforcement Learning with Verifable Rewards): 검증 가능 보상 강화 학슴
+
+- 선호 학습과 가치 기반 정책 최적화를 결합함으로써 강화 파인튜닝을 확장한한다.
+- 무슨말인지 잘 모르겠음
