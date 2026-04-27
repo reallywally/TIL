@@ -34,11 +34,19 @@
   - 코드 포맷터라서 자동으로 코드를 변경해줌
   - 자동 변경된 코드가 호불호가 갈릴 수 있음
 
+### ruff
+
+- 깃헙[https://github.com/astral-sh/ruff] 스타는 47.k
+- 적용 방법
+  - vscode에 확장 프로그램 설치하고 포맷터 설정
+- 간단후기
+  - flake8, black과 비교했을때 엄청나게 빠르다 한다.
+  - 린터와 포맷터 기능을 모두 포함하고 있어, 여러 도구를 별도로 설치하고 설정할 필요가 없다.
+  - 26년 4월 27일 작성일 기준 파이썬 포맷터 1황
+
 ## 결론
 
-- pylint는 너무 깐깐해서 불편해서 패스
-- 처음에는 flake8랑 black의 큰 차이점은 체감할 수 없었으나 다운로드 수와 깃헙 스타수가 많은 **black**이 좋을것으로 생각
-- 사용하다보니 black의 자동 변경된 코드가 마음에 들지 않는다는 의견이 생겨 flake8로 변경
+- 그건 모르겠고 ruff를 사용하자.
 
 ## 기타
 
@@ -60,3 +68,4 @@
 - <https://f-lab.kr/blog/flake8-and-pylint-and-black>
 - <https://black.readthedocs.io/en/stable/integrations/editors.html>
 - <https://velog.io/@juheesvt/vscode%EC%97%90%EC%84%9C-flake8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0>
+- 나무위키: <https://namu.wiki/w/Ruff>
