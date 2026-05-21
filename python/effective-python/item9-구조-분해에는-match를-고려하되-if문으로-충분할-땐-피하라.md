@@ -73,3 +73,30 @@ def take_enum_action(light):
 ```
 
 ## match가 진짜 빛나는 곳 — 구조 분해(Destructuring)
+
+match의 존재 이유는 복잡한 중첩 데이터를 패턴으로 처리할 수 있는것이다.
+책은 예시로 재귀함수를 사용했는데 이해가 어플리케이션 개발자에게는 친숙하지 않은 예시같아 dictionary만 작성했다.
+나중에 실무에서 match를 활용해서 문제를 해결하게되면 수정하자.
+암튼 API 응답이 왔다 가정하고 response를 다음과 같이 match로 처리할 수도 있다. 만약 ```data["hello"]```값이 "Hello, World!!"이면 222이 출력된다.
+
+```python
+response = {"data": {"hello": "Hello, World!"}, "msg": "success"}
+
+
+def test_response_match(res: dict[str, dict[str, str] | str]):
+    match res:
+        case {"data": {"hello": "Hello, World!"}, "msg": "success"}:
+            print("111")
+        case {"data": {"hello": "Hello, World!!"}, "msg2": "success"}:
+            print("222")
+        case _:
+            assert False, "Response did not match expected pattern"
+
+
+test_response_match(response)
+# 111
+```
+
+## 한줄 요약
+
+match로 단순 if를 대체하는기 보단 진짜 강점인 isinstance 체크와 구조 분해를 흐름 제어와 결합하여 활용하자.
