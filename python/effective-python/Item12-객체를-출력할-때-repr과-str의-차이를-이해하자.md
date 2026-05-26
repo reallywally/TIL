@@ -49,3 +49,82 @@ print("Is %r == %r?" % (int_value, str_value))
 print(f"Is {int_value!r} == {str_value!r}?")
 # 모두 → Is 5 == '5'?  ← 타입 차이가 명확
 ```
+
+## 사용자 정의 클래스에서의 repr/str
+
+### 기본 repr
+
+메모리 주소가 호출되어 쓸모가 없음
+
+```python
+class BetterClass:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+obj = BetterClass(1, "foo")
+print(obj)
+# → <__main__.BetterClass object at 0x1009be510>
+# 내부 상태가 전혀 안 보임!
+```
+
+### __repr__ 구현
+
+디버깅할때 아주 좋다.
+
+```python
+class BetterClass:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return f"BetterClass({self.x!r}, {self.y!r})"
+
+obj = BetterClass(2, "bar")
+print(obj)         # BetterClass(2, 'bar')
+print(str(obj))    # BetterClass(2, 'bar')  ← __str__ 없으면 __repr__ 폴백
+```
+
+### __str__도 따로 구현
+
+__repr__이 있더라도 사용자 표시용으로 __str__을 구현하기도 한다.
+
+```python
+class BetterClass:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"  # 간결한 사용자용 표현
+
+    def __repr__(self):
+        return f"BetterClass({self.x}, {self.y!r})"
+
+
+obj2 = BetterClass(2, "bar")
+print("Human readable:", obj2)  # Human readable: (2, bar)
+print("Printable: ", repr(obj2))  # Printable: BetterClass(2, 'bar')
+
+```
+
+### 호출 우선순위 정리
+
+- str(obj) 호출 시:
+  1. __str__ 있으면 → 호출
+  2. 없으면 → __repr__ 폴백
+  3. 둘 다 없으면 → object.__repr__ (메모리 주소 형태)
+
+- repr(obj) 호출 시:
+  1. __repr__ 있으면 → 호출
+  2. 없으면 → object.__repr__ (메모리 주소 형태)
+
+## 매번 __repr__을 구현해야 되는가
+
+__repr__이 디버깅에 좋다는건 이해하는데 생선하는 클래스마다 모두 __repr__을 구현하면 많이 번거로운 일이다.
+그럴땐 ```@dataclass```를 쓰면 __repr__을 자동으로 만들어줘서 직접 작성할 필요가 없다.
+
+## 한줄 요약
+
+str로 객체 정보를 확인할 수 있지만 디버깅할때는 repr이 더 좋다.
