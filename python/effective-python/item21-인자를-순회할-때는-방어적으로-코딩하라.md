@@ -56,3 +56,56 @@ def normalize_func(get_iter):
 path = "my_numbers.txt"
 percentages = normalize_func(lambda: read_visits(path))
 ```
+
+## 방법 3 (권장): 이터레이터 프로토콜을 구현한 컨테이너 클래스
+
+더 나은 방법은 이터러블 컨테이너 클래스를 정의하는 것이다.
+```for x in foo```를 만나면 파이썬은 ```iter(foo) → foo.__iter__()```를 호출해 이터레이터를 얻고, next()를 StopIteration이 날 때까지 반복한다.
+```__iter__```를 제너레이터로 구현하면 이 모든 동작을 직접 누릴 수 있다.
+
+```python
+class ReadVisits:
+    def __init__(self, data_path):
+        self.data_path = data_path
+
+    def __iter__(self):
+        with open(self.data_path) as f:
+            for line in f:
+                yield int(line)
+
+visits = ReadVisits(path)
+print(normalize(visits))   # 원본 normalize 그대로 동작!
+```
+
+normalize의 sum이 ```__iter__```를 호출해 새 이터레이터를 만들고, for도 또 ```__iter__```를 호출해 또 다른 새 이터레이터를 만든다.
+각각 독립적으로 끝까지 돌기 때문에 매 순회가 전체 데이터를 본다.
+유일한 단점은 입력 데이터를 여러 번 읽는다는 것뿐.
+
+## 이터레이터를 거부하는 방어적 코딩
+
+이제 방법3를 이용하여 "이터레이터가 아니라 컨테이너만 받겠다"고 강제할 수 있다.
+이렇게 방어 코딩을 하여 앞서 설명했던 문제 상황을 방지할 수 있다.
+
+### 방어 코딩 방법1
+
+```python
+def normalize_defensive(numbers):
+    if iter(numbers) is numbers:   # 이터레이터면 자기 자신을 반환
+        raise TypeError("Must supply a container")
+    total = sum(numbers)
+    return [100 * v / total for v in numbers]
+```
+
+### 방어 코딩 방법2
+
+```python
+from collections.abc import Iterator
+
+def normalize_defensive(numbers):
+    if isinstance(numbers, Iterator):
+        raise TypeError("Must supply a container")
+```
+
+## 한줄 요약
+
+반복문으로 순회할때는 방어적으로 코딩하자
