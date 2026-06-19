@@ -1,4 +1,4 @@
-# item 23 any와 all에 이터레이터를 넘겨 효율적인 단락 평가(short-circuit)를 하라
+# Item 23 any와 all에 이터레이터를 넘겨 효율적인 단락 평가(short-circuit)를 하라
 
 ## 상황 설정
 

@@ -1,4 +1,4 @@
-# item 17 range보다 enumerate를 선호하라
+# Item 17 range보다 enumerate를 선호하라
 
 ## range의 용도
 
