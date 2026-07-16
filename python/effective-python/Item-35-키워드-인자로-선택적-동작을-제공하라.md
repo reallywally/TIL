@@ -33,4 +33,25 @@ assert remainder(**my_kwargs) == 6
 
 ## 키워드 인자의 세 가지 이점
 
-### 호출 코드가 명확해진다
+### 1. 호출 코드가 명확해진다
+
+remainder(20, 7)만 보면 어느 게 number이고 어느 게 divisor인지 구현을 봐야 알 수 있다. number=20, divisor=7로 쓰면 명확해진다.
+
+### 2. 기본값 줄 수 있다
+
+기본값을 주면 함수 활용도가 올라간다.
+
+```python
+def flow_rate(weight_diff, time_diff, period=1):
+    return (weight_diff / time_diff) * period
+
+flow_per_second = flow_rate(weight_diff, time_diff)          # period 생략
+flow_per_hour   = flow_rate(weight_diff, time_diff, 3600)    # 필요할 때만 지정
+```
+
+### 하위 호환을 유지하며 매개변수를 확장할 수 있다.
+기존 호출부를 고치지 않고 새 기능을 추가할 수 있어 버그 위험이 줄어듭니다. 예를 들어 무게 단위 환산 인자를 추가하되 기본값을 1로 두면, 기존 호출자는 동작이 그대로이고 새 호출자만 새 인자를 쓰면 됩니다.
+pythondef flow_rate(weight_diff, time_diff, period=1, units_per_kg=1):
+    return ((weight_diff * units_per_kg) / time_diff) * period
+
+pounds_per_hour = flow_rate(weight_diff, time_diff, period=3600, units_per_kg=2.2)
