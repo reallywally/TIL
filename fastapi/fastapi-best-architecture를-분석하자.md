@@ -73,6 +73,221 @@ DI 컨테이너를 쓰는 쪽(dependency-injector, wireup, svcs)이 소수파고
 
 ## 의존성 방향
 
+### 먼저, 원래 어떻게 돼야 하나
+
+계층형 아키텍처의 규칙은 딱 하나입니다. **화살표는 한 방향으로만.**
+
+```text
+API (HTTP 처리)  →  Service (업무 규칙)  →  CRUD (DB 접근)  →  Model (테이블)
+                              ↓
+        common / core / utils / database  ← "바닥". 아무도 위를 몰라야 함
+```
+
+`common`, `core`, `utils`, `database`는 **모든 게 딛고 서는 바닥**입니다.
+바닥은 위층에 뭐가 있는지 몰라야 합니다. 콘크리트 기초가 3층 화장실 위치를 알면 안 되는 것처럼요.
+
+### 그런데 실제로는
+
+바닥이 위층을 알고 있습니다.
+
+| 위치 | 문제 |
+| --- | --- |
+| `backend/common/security/jwt.py:15` | `common`이 `app.admin.model.User`를 import |
+| `backend/common/security/permission.py:16` | `common`이 `app.admin.model.DataRule`을 import |
+| `backend/common/security/rbac.py:78` | `common`이 `plugin.casbin_rbac`을 import |
+| `backend/core/conf.py:11` | **설정**이 `plugin.settings_source`를 import |
+| `backend/utils/dynamic_config.py:35` | `utils`가 `plugin.config.service`를 import |
+| `backend/middleware/opera_log_middleware.py:13` | 미들웨어가 `app.admin.service`를 직접 호출 |
+
+### "이게 진짜 문제라는" 결정적 증거
+
+`backend/common/security/jwt.py:200`을 보세요.
+
+```python
+async def ...:
+    from backend.app.admin.crud.crud_user import user_dao   # ← 함수 "안"에서 import
+```
+
+`backend/common/security/rbac.py:78`, `backend/utils/dynamic_config.py:34-35`도 똑같습니다.
+
+**왜 파일 맨 위가 아니라 함수 안에서 import 할까요?**
+맨 위에 쓰면 **순환 import(circular import)** 로 앱이 아예 안 뜨기 때문입니다.
+`common` → `app` → `common` → ... 무한 루프죠. 그래서 "실행될 때까지 미루는" 꼼수를 쓴 겁니다.
+
+> 함수 안 import가 여러 군데 보이면, 그건 스타일 취향이 아니라 **의존성 방향이 꼬였다는 알람**입니다.
+
+### 계층이 새는 곳 두 군데 더
+
+**(1) Service가 HTTP를 알고 있다** — `backend/app/admin/service/auth_service.py:1`
+
+```python
+from fastapi import Request, Response
+from starlette.background import BackgroundTasks
+```
+
+Service는 "로그인이란 무엇인가"라는 **업무 규칙**을 담는 층입니다.
+여기에 `Request`가 들어오면:
+
+- Celery 배치 작업이나 CLI 스크립트에서 재사용 불가 (거기엔 `Request`가 없음)
+- 테스트하려면 가짜 `Request` 객체를 만들어야 함
+- 나중에 GraphQL·gRPC로 갈아탈 때 Service까지 다 뜯어야 함
+
+**(2) CRUD가 업무 예외를 던진다** — `backend/app/admin/crud/crud_user.py:30`
+
+```python
+from backend.common.exception import errors
+```
+
+CRUD는 "데이터를 가져오거나 없으면 `None`"만 하면 됩니다.
+"없으면 404" 같은 **판단**은 Service의 몫입니다.
+
+### 초보자용 요약: 왜 신경 써야 하나
+
+| 증상 | 실제로 겪게 되는 일 |
+| --- | --- |
+| 순환 import | 파일 순서 조금 바꿨는데 앱이 안 뜸 |
+| 재사용 불가 | 로그인 로직을 배치에서 못 씀 |
+| 테스트 불가 | `common` 하나 테스트하려니 DB·모델·플러그인이 전부 딸려옴 |
+| 변경 파급 | `User` 모델 필드 하나 바꿨는데 보안 모듈이 깨짐 |
+
+실제로 이 프로젝트 `backend/tests/`에는 `conftest.py`조차 없습니다. 단위 테스트를 붙이기 어려운 구조라는 방증입니다.
+
+### 어떻게 고치나
+
+1. **방향 뒤집기 (의존성 역전, DIP)**
+   `common`이 `User`를 직접 알 필요 없습니다. `common`은 "이런 모양이면 된다"는 `Protocol`만 정의하고, 실제 `User`는 `app` 쪽에서 넣어줍니다.
+
+   ```python
+   # common/security/types.py  ← common은 이것만 안다
+   class UserLike(Protocol):
+       id: int
+       is_superuser: bool
+   ```
+
+2. **Service에서 `Request` 제거**
+   API 층에서 필요한 값만 꺼내 평범한 인자로 넘깁니다.
+
+   ```python
+   # Before
+   async def login(*, request: Request, ...)
+   # After
+   async def login(*, client_ip: str, user_agent: str, ...)
+   ```
+
+3. **CRUD는 데이터만** — `None` 반환, 예외는 Service에서.
+
+4. **규칙을 도구로 강제** — [`import-linter`](https://import-linter.readthedocs.io/)를 CI에 넣으면 "`common`은 `app`을 import 할 수 없다"를 자동으로 막아줍니다. 사람 리뷰로는 절대 못 막습니다.
+
 ## 자원 라이프사이클
 
-## 정리
+### 라이프사이클이 뭔가요
+
+객체가 **언제 태어나고, 얼마나 살고, 언제 죽는지**입니다.
+웹 앱에서는 보통 세 가지 수명이 있습니다.
+
+| 수명 | 예시 |
+| --- | --- |
+| 앱 전체 (앱 켜질 때 1번) | DB 커넥션 풀, Redis 클라이언트 |
+| 요청 1건 | DB 세션, 현재 로그인 사용자 |
+| 호출 1번 | 임시 계산 결과 |
+
+### 이 프로젝트의 문제: 전부 "import 시점"에 태어난다
+
+```python
+# backend/database/db.py:121-122
+async_engine = create_database_async_engine(get_database_url())   # ← 모듈 읽는 순간 실행
+async_db_session = create_database_async_session(async_engine)
+
+# backend/database/redis.py:114
+redis_client: RedisCli = RedisCli()
+
+# backend/core/conf.py:370
+settings = get_settings()      # + .env 없으면 파일까지 복사함 (conf.py:365)
+
+# backend/app/admin/service/user_service.py:321
+user_service: UserService = UserService()
+
+# backend/app/admin/crud/crud_user.py:418
+user_dao: CRUDUser = CRUDUser(User)
+```
+
+마지막 두 패턴(`xxx_service = XxxService()`, `xxx_dao = CRUDXxx(...)`)은 **거의 모든 서비스/CRUD 파일 끝에** 반복됩니다.
+
+`import backend.database.db` 한 줄만 써도 **DB 엔진과 커넥션 풀이 즉시 생성**됩니다.
+앱이 시작하기 전에, 테스트를 수집만 해도, 심지어 문서 생성 스크립트를 돌려도요.
+
+### 더 나쁜 부분: 라이브러리가 프로세스를 죽인다
+
+```python
+# backend/database/db.py:73  /  backend/database/redis.py:57,60,63
+except Exception as e:
+    log.error(f'데이터베이스 연결 실패 {e}')
+    sys.exit()          # ← 예외를 던지는 게 아니라 프로세스를 종료
+```
+
+`sys.exit()`는 **애플리케이션 진입점(main)만** 할 수 있는 일입니다.
+바닥 모듈이 이걸 하면 호출한 쪽은 재시도도, 대체 동작도, 에러 메시지 가공도 못 합니다. 그냥 죽습니다.
+
+### "생성"과 "초기화"가 따로 논다
+
+`backend/core/registrar.py:44`에는 제대로 된 `lifespan`이 있습니다.
+
+```python
+@lifespan_manager.register
+async def register_init(app: FastAPI):
+    await create_tables()
+    await redis_client.init()      # ← 초기화는 여기서
+    ...
+```
+
+그런데 `redis_client` **객체 자체는 이미 import 때 만들어져 있습니다**.
+즉 `lifespan`은 "만드는" 곳이 아니라 "이미 만들어진 전역에 시동 거는" 곳이 돼버렸습니다.
+그래서 **import 순서가 곧 실행 순서**가 되고, 파일 위치 하나로 동작이 바뀌는 취약한 구조가 됩니다.
+
+여기에 `@cache`(`core/conf.py:361`)와 `@lru_cache`(`plugin/core.py:48`)로 굳혀둔 전역 캐시까지 얹혀 있어, 런타임에 값을 바꿔도 반영되지 않습니다.
+
+### 초보자용 요약: 왜 신경 써야 하나
+
+| 하고 싶은 일 | 지금 왜 안 되나 |
+| --- | --- |
+| DB 없이 단위 테스트 | import만 해도 커넥션 풀이 생김 |
+| 테스트용 DB로 바꿔치기 | `async_db_session`이 전역 상수라 교체 불가 |
+| 설정 다르게 두 번째 인스턴스 | `settings`가 `@cache` 전역이라 불가능 |
+| DB 죽었을 때 우아하게 재시도 | `sys.exit()`로 즉사 |
+| 테스트마다 깨끗한 상태 | 전역 싱글턴이 이전 테스트 상태를 물고 있음 |
+
+### 어떻게 고치나
+
+**원칙: 만드는 건 `lifespan`, 보관은 `app.state`, 전달은 `Depends`.**
+
+```python
+# 1) 만들기 — lifespan 안에서
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    engine = create_async_engine(get_database_url())
+    redis = RedisCli()
+    await redis.ping()                       # 실패하면 raise (sys.exit 금지)
+    yield {'engine': engine, 'redis': redis} # ← app.state 에 담김
+    await engine.dispose()
+    await redis.aclose()
+
+# 2) 꺼내 쓰기 — Depends 로
+async def get_redis(request: Request) -> RedisCli:
+    return request.app.state.redis
+
+RedisDep = Annotated[RedisCli, Depends(get_redis)]
+
+# 3) 서비스도 전역 인스턴스 대신 주입
+async def get_user_service(db: CurrentSession) -> UserService:
+    return UserService(db)
+
+UserServiceDep = Annotated[UserService, Depends(get_user_service)]
+```
+
+이렇게 하면 테스트에서 한 줄로 통째로 갈아끼울 수 있습니다.
+
+```python
+app.dependency_overrides[get_redis] = lambda: FakeRedis()
+```
+
+이게 FastAPI가 `Depends`를 만든 이유이고, 지금 프로젝트가 못 쓰고 있는 기능입니다.
